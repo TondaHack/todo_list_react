@@ -4,14 +4,14 @@ import { Grid } from 'react-mdl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import AddItem from '../TodoAddItem/index';
 import List from './../TodoList/index';
-import { addTodo, deleteTodo } from '../../actions';
+import { addTodo, deleteTodo } from '../../actions/todo';
 
 const ListContainer = (props) => {
-  const { todos, deleteTodoItem, addTodoItem } = props;
+  const { todos, deleteTodoItem, addTodoItem, user } = props;
 
   return (
     <Grid>
-      <AddItem add={addTodoItem} />
+      <AddItem add={addTodoItem} user={user} />
       <List items={todos} remove={deleteTodoItem} />
     </Grid>
   );
@@ -20,15 +20,18 @@ const ListContainer = (props) => {
 ListContainer.propTypes = {
   deleteTodoItem: React.PropTypes.func.isRequired,
   addTodoItem: React.PropTypes.func.isRequired,
-  todos: ImmutablePropTypes.listOf(React.PropTypes.string).isRequired,
+  todos: ImmutablePropTypes.map.isRequired,
+  user: ImmutablePropTypes.map.isRequired,
 };
 
-const stateTodo = todos => ({
-  todos,
+const stateTodo = state => ({
+  todos: state.todo,
+  user: state.user,
 });
+
 const dispatchTodo = dispatch => ({
-  addTodoItem: text => dispatch(addTodo(text)),
-  deleteTodoItem: id => dispatch(deleteTodo(id)),
+  addTodoItem: (text, userId) => addTodo(dispatch, text, userId),
+  deleteTodoItem: id => deleteTodo(dispatch, id),
 });
 
 export default connect(stateTodo, dispatchTodo)(ListContainer);
