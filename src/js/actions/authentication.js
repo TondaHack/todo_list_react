@@ -26,8 +26,7 @@ export function login(dispatch, email, password) {
 
       cookie.set(ACCESS_TOKEN, access_token);
       return json;
-    })
-    .then(() => getUser(dispatch));
+    });
 }
 
 export function registrate() {
